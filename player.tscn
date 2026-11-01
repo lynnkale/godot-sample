@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://jp3iglx5v1y2"]
+
+[ext_resource type="Texture2D" uid="uid://c6l2niiibewnd" path="res://art/playerGrey_up1.png" id="1_hqtel"]
+[ext_resource type="Script" uid="uid://bywqoriqbo87g" path="res://src/main/kotlin/godot/Player.kt" id="1_sweqy"]
+[ext_resource type="Texture2D" uid="uid://b0cobw556yp4d" path="res://art/playerGrey_up2.png" id="2_sweqy"]
+[ext_resource type="Texture2D" uid="uid://b2h316dyvykk3" path="res://art/playerGrey_walk1.png" id="3_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://ch550rrvno8d8" path="res://art/playerGrey_walk2.png" id="4_1jxqw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_y6c6u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hqtel")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_sweqy")
+}],
+"loop": 1,
+"name": &"up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_2hs0m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_1jxqw")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y6c6u"]
+radius = 54.0
+height = 140.0
+
+[node name="Player" type="Area2D" unique_id=437104547]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_sweqy")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1559157772]
+sprite_frames = SubResource("SpriteFrames_y6c6u")
+animation = &"up"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1490625424]
+shape = SubResource("CapsuleShape2D_y6c6u")
+
+[connection signal="body_entered" from="." to="." method="on_body_entered"]
