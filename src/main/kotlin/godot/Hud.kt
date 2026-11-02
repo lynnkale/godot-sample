@@ -6,10 +6,13 @@ import godot.api.CanvasLayer
 import godot.annotation.Script
 import godot.api.Button
 import godot.api.Label
+import godot.api.Sprite2D
 import godot.api.Timer
+import godot.core.Vector2
 import godot.core.signal0
 import godot.coroutines.await
 import godot.extension.getNodeAs
+import godot.global.GD
 
 @Script
 class Hud : CanvasLayer() {
@@ -25,6 +28,13 @@ class Hud : CanvasLayer() {
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	override fun _process(delta: Double) {
 
+	}
+
+	fun updateLivesSprite(livesLeft: Int) {
+		GD.print("$livesLeft lives left")
+		val newOffset = -40 * (MAX_LIVES - livesLeft)
+		GD.print("new offset: $newOffset")
+		getNodeAs<Sprite2D>("LivesContainer/LivesIndicator")?.offset = Vector2(0, newOffset)
 	}
 
 	fun showMessage(messageText: String) {

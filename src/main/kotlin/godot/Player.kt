@@ -9,15 +9,21 @@ import godot.api.Area2D
 import godot.api.CollisionShape2D
 import godot.api.Input
 import godot.api.Node2D
+import godot.api.Sprite2D
+import godot.core.Color
 import godot.core.StringName
 import godot.core.Vector2
 import godot.core.signal0
+import godot.coroutines.async
+import godot.coroutines.await
 import godot.extension.getNodeAs
 
 @Script
 class Player : Area2D() {
 	@Emit
 	val hit by signal0()
+
+	var isHurt: Boolean = false
 
 	@Export
 	var speed: Int = 400
@@ -38,7 +44,7 @@ class Player : Area2D() {
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	override fun _process(delta: Double) {
-		var velocity = Vector2.ZERO; // The player's movement vector.
+		var velocity = Vector2.ZERO // The player's movement vector.
 
 		if (Input.isActionPressed("move_right")) {
 			velocity.x += 1
@@ -68,7 +74,7 @@ class Player : Area2D() {
 			if (velocity.x != 0.0) {
 				animatedSprite2D.animation = StringName("walk")
 				animatedSprite2D.flipV = false
-				animatedSprite2D.flipH = velocity.x < 0;
+				animatedSprite2D.flipH = velocity.x < 0
 			} else if (velocity.y != 0.00) {
 				animatedSprite2D.animation = StringName("up")
 				animatedSprite2D.flipV = velocity.y > 0
@@ -84,13 +90,29 @@ class Player : Area2D() {
 		position = pos
 		show()
 		getNodeAs<CollisionShape2D>("CollisionShape2D")?.disabled = false
+		getNodeAs<AnimatedSprite2D>("AnimatedSprite2D")?.modulate = Color.white
 	}
 
 	@Register
 	fun onBodyEntered(body: Node2D) {
+		if (!isHurt) {
+			hit.emit()
+			isHurt = true
+			getNodeAs<AnimatedSprite2D>("AnimatedSprite2D")?.modulate = Color.red
+			async { recover() }
+		}
+	}
+
+	private suspend fun recover() {
+		getTree()?.createTimer(0.5)?.timeout?.await()
+		isHurt = false
+		getNodeAs<AnimatedSprite2D>("AnimatedSprite2D")?.modulate = Color.white
+	}
+
+	fun die() {
 		hide()
-		hit.emit()
 		// Must be deferred as we can't change physics properties on a physics callback.
 		getNodeAs<CollisionShape2D>("CollisionShape2D")?.setDeferred("disabled", true)
+
 	}
 }

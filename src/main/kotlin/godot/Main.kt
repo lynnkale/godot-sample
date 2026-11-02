@@ -8,6 +8,7 @@ import godot.annotation.Register
 import godot.api.Marker2D
 import godot.api.PackedScene
 import godot.api.PathFollow2D
+import godot.api.Sprite2D
 import godot.api.Timer
 import godot.core.Vector2
 import godot.coroutines.async
@@ -17,13 +18,18 @@ import godot.global.GD
 import kotlin.math.PI
 import kotlin.random.Random
 
+const val MAX_LIVES: Int = 3
+
 @Script
 class Main : Node() {
+
 
 	@Export
 	lateinit var mobScene: PackedScene
 
 	private var _score: Int = 0
+
+	private var _lives: Int = MAX_LIVES
 
 	// Called when the node enters the scene tree for the first time.
 	override fun _ready() {
@@ -35,7 +41,29 @@ class Main : Node() {
 	}
 
 	@Register
+	fun loseALife() {
+		_lives--
+		if (_lives < 1) {
+			gameOver()
+		}
+		GD.print("Losing a life")
+		updateLives()
+	}
+
+	fun addALife() {
+		if (_lives < MAX_LIVES) {
+			_lives++
+		}
+		GD.print("Adding a life")
+		updateLives()
+	}
+
+	private fun updateLives() {
+		getNodeAs<Hud>("HUD")?.updateLivesSprite(_lives)
+	}
+
 	fun gameOver() {
+		getNodeAs<Player>("Player")?.die()
 		getNodeAs<Timer>("MobTimer")?.stop()
 		getNodeAs<Timer>("ScoreTimer")?.stop()
 		async { getNodeAs<Hud>("HUD")?.showGameOver() }
@@ -44,6 +72,9 @@ class Main : Node() {
 	@Register
 	fun newGame() {
 		_score = 0
+		_lives = MAX_LIVES
+		updateLives()
+
 		getTree()?.callGroup("mobs", "queue_free")
 
 		val player = getNodeAs<Player>("Player");
@@ -89,6 +120,9 @@ class Main : Node() {
 	@Register
 	fun onScoreTimerTimeout() {
 		_score++
+		if (_score % 10 == 0) {
+			addALife()
+		}
 		getNodeAs<Hud>("HUD")?.updateScore(_score);
 	}
 
