@@ -4,6 +4,12 @@
 [ext_resource type="Script" uid="uid://dd5e31qmogmio" path="res://src/main/kotlin/godot/Hud.kt" id="1_64ctp"]
 [ext_resource type="Texture2D" uid="uid://yihid2e8h8b2" path="res://art/lives.png" id="3_8sq4i"]
 
+[sub_resource type="InputEventAction" id="InputEventAction_2klk3"]
+action = &"start_game"
+
+[sub_resource type="Shortcut" id="Shortcut_dwk7t"]
+events = [SubResource("InputEventAction_2klk3")]
+
 [node name="HUD" type="CanvasLayer" unique_id=1763200867]
 script = ExtResource("1_64ctp")
 
@@ -50,6 +56,7 @@ offset_right = 100.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
+shortcut = SubResource("Shortcut_dwk7t")
 text = "Start"
 
 [node name="MessageTimer" type="Timer" parent="." unique_id=310467853]

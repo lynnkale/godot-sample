@@ -33,7 +33,6 @@ class Hud : CanvasLayer() {
 	fun updateLivesSprite(livesLeft: Int) {
 		GD.print("$livesLeft lives left")
 		val newOffset = -40 * (MAX_LIVES - livesLeft)
-		GD.print("new offset: $newOffset")
 		getNodeAs<Sprite2D>("LivesContainer/LivesIndicator")?.offset = Vector2(0, newOffset)
 	}
 

@@ -5,10 +5,10 @@ import godot.api.Node
 import godot.annotation.Script
 import godot.annotation.Export
 import godot.annotation.Register
+import godot.api.AudioStreamPlayer2D
 import godot.api.Marker2D
 import godot.api.PackedScene
 import godot.api.PathFollow2D
-import godot.api.Sprite2D
 import godot.api.Timer
 import godot.core.Vector2
 import godot.coroutines.async
@@ -27,12 +27,17 @@ class Main : Node() {
 	@Export
 	lateinit var mobScene: PackedScene
 
+	var music: AudioStreamPlayer2D? = null
+	var gameOverSound: AudioStreamPlayer2D? = null
+
 	private var _score: Int = 0
 
 	private var _lives: Int = MAX_LIVES
 
 	// Called when the node enters the scene tree for the first time.
 	override fun _ready() {
+		music = getNodeAs("Music")
+		gameOverSound = getNodeAs("GameOver")
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -67,10 +72,13 @@ class Main : Node() {
 		getNodeAs<Timer>("MobTimer")?.stop()
 		getNodeAs<Timer>("ScoreTimer")?.stop()
 		async { getNodeAs<Hud>("HUD")?.showGameOver() }
+		music?.stop()
+		gameOverSound?.play()
 	}
 
 	@Register
 	fun newGame() {
+		music?.play()
 		_score = 0
 		_lives = MAX_LIVES
 		updateLives()

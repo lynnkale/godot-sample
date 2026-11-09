@@ -1,0 +1,30 @@
+[gd_resource type="VisualShader" format=3 uid="uid://1agcpw0qjbvr"]
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_x23n0"]
+parameter_name = "tint"
+default_value_enabled = true
+default_value = Color(1, 0, 0, 1)
+
+[sub_resource type="VisualShaderNodeBooleanParameter" id="VisualShaderNodeBooleanParameter_qmy0r"]
+parameter_name = "active"
+default_value_enabled = true
+
+[sub_resource type="VisualShaderNodeIf" id="VisualShaderNodeIf_7065i"]
+default_input_values = [0, 0.0, 1, 1.0, 2, 1e-05, 3, Vector3(0, 0, 0), 4, Vector3(0, 0, 0), 5, Vector3(0, 0, 0)]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_v3bq2"]
+input_name = "color"
+
+[resource]
+mode = 1
+flags/light_only = false
+nodes/vertex/0/position = Vector2(786.6667, 386.66666)
+nodes/vertex/2/node = SubResource("VisualShaderNodeColorParameter_x23n0")
+nodes/vertex/2/position = Vector2(13.333333, 480)
+nodes/vertex/3/node = SubResource("VisualShaderNodeBooleanParameter_qmy0r")
+nodes/vertex/3/position = Vector2(0, 266.66666)
+nodes/vertex/4/node = SubResource("VisualShaderNodeIf_7065i")
+nodes/vertex/4/position = Vector2(560, 426.66666)
+nodes/vertex/5/node = SubResource("VisualShaderNodeInput_v3bq2")
+nodes/vertex/5/position = Vector2(40, 720)
+nodes/vertex/connections = PackedInt32Array(3, 0, 4, 0, 2, 0, 4, 3, 4, 0, 0, 2, 5, 0, 4, 4, 5, 0, 4, 5)
